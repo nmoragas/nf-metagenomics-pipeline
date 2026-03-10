@@ -1,0 +1,28 @@
+# construcció d'imatge a partir de un .def file. En aquest cas nos eria encessari perque hi ha repositoris, i es pot construi la imatge a partir de imatge existen amb:
+# apptainer build fastqc.sif docker://biocontainers/fastqc:v0.11.9_cv8
+
+Bootstrap: docker
+From: debian:bullseye-slim
+
+%labels
+    Author nmoragas@live.com
+    Tool FastQC
+    Version 1.0
+    Description Quality control of raw/trimmed sequencing reads.
+
+%environment
+    export LC_ALL=C
+    export LANG=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update && apt-get install -y --no-install-recommends \
+        default-jre \
+        python3-pip \
+        fastqc
+    rm -rf /var/lib/apt/lists/*
+
+%test
+    fastqc --version
+
+# construi imatge apptainer build sif/fastqc.sif containers/fastqc.def
