@@ -1,3 +1,3 @@
 sample_id	fastq_r1	fastq_r2
-]633;E;for r1 in data/raw_example/*_1.fq.gz;9f039b50-99c1-408f-b376-1da3f6217e07]633;C1000182184C	data/raw_example/1000182184C_1.fq.gz	data/raw_example/1000182184C_2.fq.gz
--1007162381C	data/raw_example/-1007162381C_1.fq.gz	data/raw_example/-1007162381C_2.fq.gz
+-1007162381C	/mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/data/raw_data_example/-1007162381C_1.fq.gz	/mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/data/raw_data_example/-1007162381C_2.fq.gz
+1000182184C	/mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/data/raw_data_example/1000182184C_1.fq.gz	/mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/data/raw_data_example/1000182184C_2.fq.gz

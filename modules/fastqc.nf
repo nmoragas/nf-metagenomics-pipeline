@@ -7,25 +7,29 @@
  */
 
 process FASTQC {
+    // nom logs:
+    tag "1_fastqc"
+    
 
-    # Es pot utilitzar tant containers generats: 
-    container "${params.sif_dir}/fastqc.sif"
-    # com de repositori: 
-    # container "docker://biocontainers/fastqc:v0.11.9_cv8"
+    // # Es pot utilitzar tant containers generats: 
+    container "${params.sif_dir}/fastqc.sif" 
+    // # com de repositori: 
+    // container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
 
+    publishDir "${params.outdir}/fastqc/${sample_id}", mode: 'copy'
 
     input:
-    path reads
+    tuple val(sample_id), path(r1), path(r2)
 
     output:
-    path "${reads.simpleName}_fastqc.zip", emit: zip
-    path "${reads.simpleName}_fastqc.html", emit: html
+    tuple val(sample_id), path("*.html"), emit: html
+    tuple val(sample_id), path("*.zip"),  emit: zip
 
     script:
-        """
-        fastqc \\
-            --t ${task.cpus}\\
-            --outdir .\\
-            ${reads}
-        """
+"""
+fastqc \\
+    --threads ${task.cpus} \\
+    --outdir . \\
+    -- ${r1} ${r2}
+"""
 }

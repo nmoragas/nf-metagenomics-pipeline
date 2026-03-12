@@ -1,10 +1,13 @@
 #!/usr/bin/env nextflow
+nextflow.enable.dsl = 2
 
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║         METAGENOMICS SHOTGUN PIPELINE  v2.0                                  ║
 ║                                                                              ║
 ║  fastq.gz                                                                    ║
+║    │                                                                         ║
+║    ├─ [0] SAMPLESHEET_CHECK  ──► generacio llistat mostres                   ║
 ║    │                                                                         ║
 ║    ├─ [1] FastQC + MultiQC  ──► Pre-processing QC                            ║
 ║    │                                                                         ║
@@ -24,75 +27,49 @@
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-
-// Module INCLUDE statements
+// ── Importar mòduls ───────────────────────────────────────────────────────────
+include { SAMPLESHEET_CHECK } from './modules/sampleSheet_check.nf'
 include { FASTQC } from './modules/fastqc.nf'
 
+// ── Paràmetres per defecte ──────────────────────────────
+params.input  = null
+params.outdir = "${launchDir}/resultats"
 
-/*
- * Pipeline parameters
- */
-params {
 
-    /* 1 config. entrada:  */
-        // Primary input - csv amb ruta dels fastq. aparellats. Genració de aquest llistat amb: generate_samplesheet.py
-    input: Path
+// ── Validació entrada ──────────────────────────────────────
+if (!params.input)      error "ERROR: --input és obligatori (directori amb fastq.gz)"
 
-    test {
-        params.input = "${projectDir}/data/samplesheet.csv"
-            }
 
-    // fastqc container
-    sif_dir = "./sif"
-    
- 
-    // Reference genome archive
-    hisat2_index_zip: Path
 
-    // Report ID
-    report_id: String
-}
 
-singularity {
-    enabled    = true
-    autoMounts = true
-}
-
+// ── Workflow ──────────────────────────────────────────────────────────────────
 workflow {
-
+    
     main:
-    // Create input channel from the contents of a CSV file (samplesheet.csv)
-    read_ch = channel.fromPath(params.input)
-        .splitCsv(header: true)
-        .map { row -> file(row.fastq_path) }
+    // 00. Generar samplesheet automàticament
+    ch_input_dir = Channel.fromPath( file(params.input).toAbsolutePath().toString() )
+    SAMPLESHEET_CHECK( ch_input_dir )
 
-    // Initial quality control
-    FASTQC(read_ch)
+    // 01. FastQC 
+    // Llegir TSV i separar columnes
+   
+    ch_reads = SAMPLESHEET_CHECK.out.samplesheet
+    .splitCsv( header: true, sep: '\t' )
+    .map { row -> 
+        def sample = row.sample_id.replaceAll(/^-/, '')  // elimina - inicial
+        [ sample, file(row.fastq_r1), file(row.fastq_r2) ] 
+    }
 
-    // Adapter trimming and post-trimming QC
+    // Fastqc
+    FASTQC( ch_reads  )
+
+    // 02. Alineament al genoma humà i eliminació de contaminació
+    // HUMAN_ALIGNMENT( GENERATE_SAMPLESHEET.out.samplesheet )
+
+    // 03. Classificació taxonòmica amb Kraken2
+    // KRAKEN2( HUMAN_ALIGNMENT.out.reads_clean )
     
-
-    // Alignment to a reference genome
     
-
-    // Comprehensive QC report generation
-    
-    // Declarar SORTIDES a la secció:
-    publish:
-    fastqc_zip = FASTQC.out.zip
-    fastqc_html = FASTQC.out.html
-
 }
 
-
-// on es publica resultat cadascuna de les seccions. 
-output {
-    fastqc_zip {
-        path 'fastqc'
-    }
-    fastqc_html {
-        path 'fastqc'
-    }
-
-
-// Executar: nextflow run metagenomics.nf -profile test -> teoricament sortida a results/fastqc
+// Executar: nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile singularity

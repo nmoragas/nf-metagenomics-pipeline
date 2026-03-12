@@ -9,34 +9,30 @@
 ## Flux complet
 
 ```
-fastq.gz
-  │
-  ▼
-[1] Bowtie2 ──────────────► Eliminar reads humans (--un-conc-gz)
-  │
-  ▼
-[2] FastQC + MultiQC ─────► QC pre-processament
-  │
-  ▼
-[3] Clumpify (BBTools) ───► Eliminar duplicats de PCR (+ òptics)
-  │
-  ▼
-[4] BBDuk (BBTools) ──────► Trimming d'adaptadors + filtre de qualitat
-  │
-  ▼
-[5] FastQC + MultiQC ─────► QC post-processament
-  │
-  ▼
-[6] Kraken2 ──────────────► Classificació taxonòmica
-  │
-  ▼
-[7] Bracken ──────────────► Re-estimació d'abundàncies (Bayesian)
-  │
-  ▼
-[8] KrakenTools ──────────► Diversitat alfa + sortida MPA
-  │
-  ▼
-[9] Merge ────────────────► Taula d'abundàncies (counts + relatives)
+╔══════════════════════════════════════════════════════════════════════════════╗
+║         METAGENOMICS SHOTGUN PIPELINE  v1.0                                  ║
+║                                                                              ║
+║  fastq.gz                                                                    ║
+║    │                                                                         ║
+║    ├─ [0] SAMPLESHEET_CHECK  ──► generacio llistat mostres                   ║
+║    │                                                                         ║
+║    ├─ [1] FastQC + MultiQC  ──► Pre-processing QC                            ║
+║    │                                                                         ║
+║    ├─ [2] Bowtie2  ──► Human reads removal                                   ║
+║    │                                                                         ║
+║    ├─ [3] Clumpify (BBTools)  ──► PCR duplicate removal                      ║
+║    │                                                                         ║
+║    ├─ [4] BBDuk (BBTools)  ──► Adapter trimming + quality filter             ║
+║    │                                                                         ║
+║    ├─ [5] FastQC + MultiQC  ──► Post-processing QC                           ║
+║    │                                                                         ║
+║    ├─ [6] Kraken2  ──► Taxonomic classification                              ║
+║    │                                                                         ║
+║    ├─ [7] Bracken  ──► Abundance re-estimation                               ║
+║    │                                                                         ║
+║    └─ [8] KrakenTools  ──► Alpha diversity + Abundance table                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
 ```
 
 ## Contenidors Singularity (un per pas)
@@ -76,11 +72,6 @@ python bin/generate_samplesheet.py \
     --input /path/to/fastqs/ \
     --output samplesheet.tsv
 
-# Single-end:
-python bin/generate_samplesheet.py \
-    --input /path/to/fastqs/ \
-    --single-end \
-    --output samplesheet.tsv
 ```
 
 El sample sheet resultant:
@@ -110,6 +101,18 @@ nextflow run main.nf \
 
 # Reprendre una execució interrompuda:
 nextflow run main.nf -resume [resta de paràmetres]
+
+# Executar directament des de GitHub:
+nextflow run github.com/grup/metagenomics-pipeline \
+    -profile singularity,slurm \
+    -r v1.0 \
+    --input /data/fastqs/ \
+    ##--samples samplesheet.tsv \
+    --kraken2_db /databases/kraken2_standard \
+    --human_db /databases/bowtie2/hg38 \
+    --outdir ./results
+
+
 ```
 
 ---
