@@ -4,7 +4,7 @@
 **nf-metagenomics-pipeline** is a bioinformatics analysis pipeline for assembly, binning and annotation of metagenomes from FASTQ to abundance table.
 
 
-**ON GOING DEVELOPMENT** 
+**ON GOING DEVELOPMENT**
 
 ## Flux complet
 
