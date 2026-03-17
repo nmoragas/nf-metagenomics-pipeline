@@ -8,18 +8,18 @@
 
 process FASTQC {
     // nom logs:
-    tag "1_fastqc"
+    tag "${step}"
     
 
     // # Es pot utilitzar tant containers generats: 
-    container "${params.sif_dir}/fastqc.sif" 
+    // container "${params.sif_dir}/fastqc.sif" 
     // # com de repositori: 
-    // container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
+    //container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
 
-    publishDir "${params.outdir}/fastqc/${sample_id}", mode: 'copy'
+    publishDir "${params.outdir}/${step}/${sample_id}", mode: 'copy'
 
     input:
-    tuple val(sample_id), path(r1), path(r2)
+    tuple val(step), val(sample_id), path(r1), path(r2)
 
     output:
     tuple val(sample_id), path("*.html"), emit: html

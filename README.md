@@ -84,6 +84,8 @@ sample_B        /data/sample_B_R1_001.fastq.gz    /data/sample_B_R2_001.fastq.gz
 ### 3. Executar el pipeline
 
 ```bash
+ module load apps/nextflow/25.04.6
+
 # Singularity en local:
 nextflow run main.nf \
     -profile singularity \

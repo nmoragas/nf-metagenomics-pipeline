@@ -50,7 +50,7 @@ workflow {
     ch_input_dir = Channel.fromPath( file(params.input).toAbsolutePath().toString() )
     SAMPLESHEET_CHECK( ch_input_dir )
 
-    // 01. FastQC 
+    // 01. FastQC PRE-alineament 
     // Llegir TSV i separar columnes
    
     ch_reads = SAMPLESHEET_CHECK.out.samplesheet
@@ -61,10 +61,12 @@ workflow {
     }
 
     // Fastqc
-    FASTQC( ch_reads  )
+    FASTQC( ch_reads.map { sample, r1, r2 -> [ "01_pre_fastqc", sample, r1, r2 ] } )
 
     // 02. Alineament al genoma humà i eliminació de contaminació
     // HUMAN_ALIGNMENT( GENERATE_SAMPLESHEET.out.samplesheet )
+
+
 
     // 03. Classificació taxonòmica amb Kraken2
     // KRAKEN2( HUMAN_ALIGNMENT.out.reads_clean )
@@ -72,4 +74,4 @@ workflow {
     
 }
 
-// Executar: nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile singularity
+// Executar: nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile singularity -resume

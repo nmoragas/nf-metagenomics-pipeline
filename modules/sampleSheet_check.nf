@@ -41,14 +41,14 @@
 
 process SAMPLESHEET_CHECK {
     // nom logs:
-    tag "0_samplesheet"
+    tag "00_samplesheet"
     
     
     // Container lleuger amb Python — no necessita eines de bioinformàtica
     // container "docker://python:3.11-slim"
   
     // Publicar el samplesheet generat:
-    publishDir "${params.outdir}/0pipeline_info", mode: 'copy'
+    publishDir "${params.outdir}/00_sample_info", mode: 'copy'
 
     input:
     val input_dir   // directori amb els fastq.gz
