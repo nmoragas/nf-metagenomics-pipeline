@@ -1,4 +1,4 @@
-# 🧬 Metagenomics Shotgun Pipeline v2.0
+# 🧬 Metagenomics Shotgun Pipeline v1.0
 ## Introduction
 
 **nf-metagenomics-pipeline** is a bioinformatics analysis pipeline for assembly, binning and annotation of metagenomes from FASTQ to abundance table.
