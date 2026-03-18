@@ -30,6 +30,7 @@ nextflow.enable.dsl = 2
 // ── Importar mòduls ───────────────────────────────────────────────────────────
 include { SAMPLESHEET_CHECK } from './modules/sampleSheet_check.nf'
 include { FASTQC } from './modules/fastqc.nf'
+include { BOWTIE2_HUMAN_REMOVAL } from './modules/remove_human_bowtie2.nf'
 
 // ── Paràmetres per defecte ──────────────────────────────
 params.input  = null
@@ -50,9 +51,8 @@ workflow {
     ch_input_dir = Channel.fromPath( file(params.input).toAbsolutePath().toString() )
     SAMPLESHEET_CHECK( ch_input_dir )
 
-    // 01. FastQC PRE-alineament 
-    // Llegir TSV i separar columnes
-   
+    
+    // Llegir TSV i separar columnes   
     ch_reads = SAMPLESHEET_CHECK.out.samplesheet
     .splitCsv( header: true, sep: '\t' )
     .map { row -> 
@@ -60,11 +60,11 @@ workflow {
         [ sample, file(row.fastq_r1), file(row.fastq_r2) ] 
     }
 
-    // Fastqc
+    // 01. FastQC PRE-alineament     
     FASTQC( ch_reads.map { sample, r1, r2 -> [ "01_pre_fastqc", sample, r1, r2 ] } )
 
-    // 02. Alineament al genoma humà i eliminació de contaminació
-    // HUMAN_ALIGNMENT( GENERATE_SAMPLESHEET.out.samplesheet )
+    // 02. Alineament al genoma humà i eliminació 
+    BOWTIE2_HUMAN_REMOVAL( ch_reads )
 
 
 

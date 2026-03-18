@@ -1,4 +1,9 @@
-# 🧬 Metagenomics Shotgun Pipeline v1.0
+# 🧬 NF - Metagenomics Shotgun Pipeline v1.0
+
+> [!WARNING]
+> 🚧 **Pipeline en construcció — No finalitzat** 🚧
+> Aquest pipeline està actualment en desenvolupament actiu. Pot contenir errors i canvis importants sense avís previ.
+
 ## Introduction
 
 **nf-metagenomics-pipeline** is a bioinformatics analysis pipeline for assembly, binning and annotation of metagenomes from FASTQ to abundance table.
@@ -137,6 +142,37 @@ nextflow run github.com/grup/metagenomics-pipeline \
 | `--kraken2_confidence` | `0.0` | Llindar de confiança (0–1) |
 
 ---
+## ⚙️ Configuració avançada — `nextflow.config`
+
+Els paràmetres del pipeline es poden modificar directament al fitxer `nextflow.config` sense tocar els mòduls.
+
+### Bowtie2 — Human Read Removal
+```groovy
+// Ruta a l'índex bowtie2 del genoma humà (hg38)
+params.human_db = "/mnt/typhon/references/human/hg38/ncbi/indexes/bowtie2/genome"
+
+// Flags addicionals de bowtie2 per a l'eliminació de reads humanes.
+//
+// Mode d'alineament (de menys a més sensible):
+//   --very-fast-local | --fast-local | --sensitive-local | --very-sensitive-local
+//   --very-fast       | --fast       | --sensitive       | --very-sensitive
+//   Recomanat: --very-sensitive-local (captura reads humanes degradades o amb adaptadors)
+//
+// Control de parelles:
+//   --no-mixed       evita alinear una read de forma independent si la parella no alinia
+//   --no-discordant  descarta alineaments on les dues reads apunten en direcció inesperada
+//   Recomanat: afegir ambdós per mantenir la integritat de les parelles
+//
+// Nombre d'alineaments reportats:
+//   -k 1  reporta només el primer alineament trobat (suficient per a host removal, més ràpid)
+//
+params.bowtie2_extra = "--very-sensitive-local --no-mixed --no-discordant -k 1"
+```
+
+> Els valors del `nextflow.config` es poden sobreescriure puntuals des de la línia de comandes:
+> ```bash
+> nextflow run main.nf --bowtie2_extra "--sensitive-local --no-mixed --no-discordant -k 1"
+> ```
 
 ## 📦 Bases de dades necessàries
 
