@@ -16,7 +16,8 @@ process FASTQC {
     // # com de repositori: 
     //container "https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0"
 
-    publishDir "${params.outdir}/${step}/${sample_id}", mode: 'copy'
+    //publishDir "${params.outdir}/${step}/${sample_id}", mode: 'copy'
+    publishDir "${params.outdir}/${step}", mode: 'copy'
 
     input:
     tuple val(step), val(sample_id), path(r1), path(r2)

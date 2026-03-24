@@ -29,8 +29,13 @@ nextflow.enable.dsl = 2
 
 // ── Importar mòduls ───────────────────────────────────────────────────────────
 include { SAMPLESHEET_CHECK } from './modules/sampleSheet_check.nf'
-include { FASTQC } from './modules/fastqc.nf'
+include { FASTQC as FASTQC_PRE } from './modules/fastqc.nf'
+include { MULTIQC as MULTIQC_PRE  } from './modules/multiqc.nf'
 include { BOWTIE2_HUMAN_REMOVAL } from './modules/remove_human_bowtie2.nf'
+include { CLUMPIFY_DUPLICATE_REMOVAL } from './modules/clumpify_duplicate_removal.nf'
+include { BBDUK_TRIMMING } from './modules/bbduck_adapter_trimming.nf'
+include { FASTQC as FASTQC_POST } from './modules/fastqc.nf'
+include { MULTIQC as MULTIQC_POST } from './modules/multiqc.nf'
 
 // ── Paràmetres per defecte ──────────────────────────────
 params.input  = null
@@ -60,18 +65,36 @@ workflow {
         [ sample, file(row.fastq_r1), file(row.fastq_r2) ] 
     }
 
-    // 01. FastQC PRE-alineament     
-    FASTQC( ch_reads.map { sample, r1, r2 -> [ "01_pre_fastqc", sample, r1, r2 ] } )
+    // 01. FastQC + MULTIQC PRE-alineament     
+    FASTQC_PRE( ch_reads.map { sample, r1, r2 -> [ "01_pre_fastqc", sample, r1, r2 ] } )
+    MULTIQC_PRE(
+    FASTQC_PRE.out.zip
+        .map { sample, zips -> zips }
+        .collect()
+        .map { zips -> [ "01_pre_fastqc", zips ] }
+    )
 
     // 02. Alineament al genoma humà i eliminació 
     BOWTIE2_HUMAN_REMOVAL( ch_reads )
 
+    // 03. Removes PCR duplicates amb clumpify
+    CLUMPIFY_DUPLICATE_REMOVAL( BOWTIE2_HUMAN_REMOVAL.out.reads )
 
+    // 04. Adapter trimming + quality filter
+    BBDUK_TRIMMING( CLUMPIFY_DUPLICATE_REMOVAL.out.reads )
 
-    // 03. Classificació taxonòmica amb Kraken2
-    // KRAKEN2( HUMAN_ALIGNMENT.out.reads_clean )
-    
-    
+    // 05. FastQC POST + MultiQC POST
+    FASTQC_POST( BBDUK_TRIMMING.out.reads.map { sample, r1, r2 -> [ "05_post_fastqc", sample, r1, r2 ] } )
+    MULTIQC_POST(
+    FASTQC_POST.out.zip
+        .map { sample, zips -> zips }
+        .collect()
+        .map { zips -> [ "05_post_fastqc", zips ] }
+    )
+      
 }
 
-// Executar: nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile singularity -resume
+// Executar: 
+// module load apps/nextflow/25.04.6
+// nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile singularity,slurm
+// nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile apptainer,slurm -resume
