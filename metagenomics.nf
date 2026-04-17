@@ -16,6 +16,8 @@ nextflow.enable.dsl = 2
 ║    ├─ [3] Clumpify (BBTools)  ──► PCR duplicate removal                      ║
 ║    │                                                                         ║
 ║    ├─ [4] BBDuk (BBTools)  ──► Adapter trimming + quality filter             ║
+║    │      │                                                                  ║
+║    │      └─ [4] clean_reads                                                 ║
 ║    │                                                                         ║
 ║    ├─ [5] FastQC + MultiQC  ──► Post-processing QC                           ║
 ║    │                                                                         ║
@@ -36,6 +38,8 @@ include { CLUMPIFY_DUPLICATE_REMOVAL } from './modules/clumpify_duplicate_remova
 include { BBDUK_TRIMMING } from './modules/bbduck_adapter_trimming.nf'
 include { FASTQC as FASTQC_POST } from './modules/fastqc.nf'
 include { MULTIQC as MULTIQC_POST } from './modules/multiqc.nf'
+include { KRAKEN2 } from './modules/kraken2.nf'
+include { BRACKEN } from './modules/braken.nf'
 
 // ── Paràmetres per defecte ──────────────────────────────
 params.input  = null
@@ -91,7 +95,14 @@ workflow {
         .collect()
         .map { zips -> [ "05_post_fastqc", zips ] }
     )
-      
+
+    // 06. Classificació taxonòmica amb Kraken2
+    KRAKEN2( BBDUK_TRIMMING.out.reads )
+
+    // 07. Bracken abundance re-estimation
+    BRACKEN( KRAKEN2.out.report) 
+ 
+
 }
 
 // Executar: 

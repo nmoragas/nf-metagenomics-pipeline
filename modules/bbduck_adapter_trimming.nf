@@ -10,7 +10,7 @@ process BBDUK_TRIMMING {
     publishDir "${params.outdir}/04_bbduk_trim", mode: 'copy',
         saveAs: { fn -> fn.endsWith('.log') ? fn : null }
 
-    publishDir "${params.outdir}/05_clean_reads", mode: 'copy',
+    publishDir "${params.outdir}/04_clean_reads", mode: 'copy',
         saveAs: { fn -> fn.endsWith('.fastq.gz') ? fn : null }
 
     input:
