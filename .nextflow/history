@@ -1,0 +1,2 @@
+2026-04-17 19:10:12	-	peaceful_goldwasser	-	8219fa1ade8f2656522074cd550df1b4	52c19e61-df11-41f1-a1f8-4f5c2278b3a3	nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile apptainer,slurm -resume
+2026-04-17 19:14:48	-	determined_gutenberg	-	669bfaaeb0e11bc75547a1ab9c0aaec3	52c19e61-df11-41f1-a1f8-4f5c2278b3a3	nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile apptainer,slurm -resume

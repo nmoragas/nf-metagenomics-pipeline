@@ -1,0 +1,142 @@
+Apr-17 19:10:09.336 [main] DEBUG nextflow.cli.Launcher - $> nextflow run ../nf-metagenomics-pipeline/metagenomics.nf --input data/raw_data_example/ -profile apptainer,slurm -resume
+Apr-17 19:10:09.544 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.04.6
+Apr-17 19:10:09.622 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/47813243S/.nextflow/plugins; core-plugins: nf-amazon@2.15.0,nf-azure@1.16.0,nf-cloudcache@0.4.3,nf-codecommit@0.2.3,nf-console@1.2.1,nf-google@1.21.1,nf-k8s@1.0.0,nf-tower@1.11.4,nf-wave@1.12.1
+Apr-17 19:10:09.697 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Apr-17 19:10:09.700 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Apr-17 19:10:09.707 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Apr-17 19:10:09.735 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Apr-17 19:10:09.808 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/nextflow.config
+Apr-17 19:10:09.816 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/nextflow.config
+Apr-17 19:10:09.909 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/47813243S/.nextflow/secrets/store.json
+Apr-17 19:10:09.917 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@5f84abe8] - activable => nextflow.secret.LocalSecretsProvider@5f84abe8
+Apr-17 19:10:09.980 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `apptainer,slurm`
+Apr-17 19:10:11.734 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [standard, slurm, apptainer, singularity, docker]
+Apr-17 19:10:11.750 [main] WARN  nextflow.config.ConfigBuilder - It appears you have never run this project before -- Option `-resume` is ignored
+Apr-17 19:10:11.830 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Apr-17 19:10:11.865 [main] DEBUG nextflow.cli.CmdRun - Launching `../nf-metagenomics-pipeline/metagenomics.nf` [peaceful_goldwasser] DSL2 - revision: 8219fa1ade
+Apr-17 19:10:11.869 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Apr-17 19:10:11.869 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Apr-17 19:10:11.982 [main] DEBUG nextflow.Session - Session UUID: 52c19e61-df11-41f1-a1f8-4f5c2278b3a3
+Apr-17 19:10:11.984 [main] DEBUG nextflow.Session - Run name: peaceful_goldwasser
+Apr-17 19:10:11.998 [main] DEBUG nextflow.Session - Executor pool size: 2
+Apr-17 19:10:12.016 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Apr-17 19:10:12.028 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=10; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-17 19:10:12.169 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.04.6 build 5954
+  Created: 01-07-2025 11:27 UTC (13:27 CEST)
+  System: Linux 4.18.0-553.56.1.el8_10.x86_64
+  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 21.0.5+11-LTS
+  Encoding: UTF-8 (UTF-8)
+  Process: 1542658@compute-13.odap.ico.local [192.168.36.113]
+  CPUs: 2 - Mem: 16 GB (240 MB) - Swap: 0 (0)
+Apr-17 19:10:12.273 [main] DEBUG nextflow.Session - Work-dir: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/work [nfs]
+Apr-17 19:10:12.364 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Apr-17 19:10:12.380 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Apr-17 19:10:12.407 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Apr-17 19:10:12.470 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Apr-17 19:10:12.489 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 3; maxThreads: 1000
+Apr-17 19:10:12.661 [main] DEBUG nextflow.Session - Session start
+Apr-17 19:10:13.531 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Apr-17 19:10:15.361 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:SAMPLESHEET_CHECK` matches process SAMPLESHEET_CHECK
+Apr-17 19:10:15.388 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.389 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.406 [main] DEBUG nextflow.executor.Executor - [warm up] executor > slurm
+Apr-17 19:10:15.420 [main] DEBUG n.processor.TaskPollingMonitor - Creating task monitor for executor 'slurm' > capacity: 100; pollInterval: 5s; dumpInterval: 5m 
+Apr-17 19:10:15.425 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: slurm)
+Apr-17 19:10:15.432 [main] DEBUG n.executor.AbstractGridExecutor - Creating executor 'slurm' > queue-stat-interval: 1m
+Apr-17 19:10:15.487 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'SAMPLESHEET_CHECK': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.672 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:FASTQC` matches process FASTQC_PRE
+Apr-17 19:10:15.691 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.692 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.694 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FASTQC_PRE': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.749 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MULTIQC` matches process MULTIQC_PRE
+Apr-17 19:10:15.756 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.756 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.764 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MULTIQC_PRE': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.786 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:BOWTIE2_HUMAN_REMOVAL` matches process BOWTIE2_HUMAN_REMOVAL
+Apr-17 19:10:15.791 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.792 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.796 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BOWTIE2_HUMAN_REMOVAL': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.823 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:CLUMPIFY_DUPLICATE_REMOVAL` matches process CLUMPIFY_DUPLICATE_REMOVAL
+Apr-17 19:10:15.829 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.829 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.832 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'CLUMPIFY_DUPLICATE_REMOVAL': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.852 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:BBDUK_TRIMMING` matches process BBDUK_TRIMMING
+Apr-17 19:10:15.863 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.863 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.866 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BBDUK_TRIMMING': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.887 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:FASTQC` matches process FASTQC_POST
+Apr-17 19:10:15.898 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.898 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.900 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'FASTQC_POST': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.919 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:MULTIQC` matches process MULTIQC_POST
+Apr-17 19:10:15.926 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.926 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.929 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'MULTIQC_POST': maxForks=0; fair=false; array=0
+Apr-17 19:10:15.957 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:KRAKEN2` matches process KRAKEN2
+Apr-17 19:10:15.966 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:15.968 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:15.970 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'KRAKEN2': maxForks=0; fair=false; array=0
+Apr-17 19:10:16.007 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:BRACKEN` matches process BRACKEN
+Apr-17 19:10:16.022 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Apr-17 19:10:16.023 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Apr-17 19:10:16.025 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'BRACKEN': maxForks=0; fair=false; array=0
+Apr-17 19:10:16.084 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_f7939ea02ad826c4: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/sampleSheet_check.nf
+  Script_19714916353858f3: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/bbduck_adapter_trimming.nf
+  Script_6b7e31ace6dd1814: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/multiqc.nf
+  Script_c76f7e99684344c4: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/remove_human_bowtie2.nf
+  Script_b2f7426f19df3961: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/fastqc.nf
+  Script_c094bd44384c94f1: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/kraken2.nf
+  Script_19ccf323d612508d: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/clumpify_duplicate_removal.nf
+  Script_994ad37b2832aaf6: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/metagenomics.nf
+  Script_33759c178f8afb30: /mnt/nas-0/hydra/ubs/shared/projects/microbiome/pipelines/shotgun_pipeline/nf-metagenomics-pipeline/modules/braken.nf
+Apr-17 19:10:16.091 [main] DEBUG nextflow.Session - Session aborted -- Cause: Missing process or function KREPORT2MPA()
+Apr-17 19:10:16.170 [main] DEBUG nextflow.Session - The following nodes are still active:
+  [operator] splitCsv
+  [operator] map
+  [operator] map
+  [operator] map
+  [operator] collect
+  [operator] map
+  [operator] map
+  [operator] map
+  [operator] collect
+  [operator] map
+
+Apr-17 19:10:16.177 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: slurm) - terminating tasks monitor poll loop
+Apr-17 19:10:16.184 [main] ERROR nextflow.cli.Launcher - @unknown
+nextflow.exception.MissingProcessException: Missing process or function KREPORT2MPA()
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:192)
+	at nextflow.script.BindableDef.invoke_a(BindableDef.groovy:51)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at nextflow.script.BaseScript.run0(BaseScript.groovy:182)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:193)
+	at nextflow.script.parser.v1.ScriptLoaderV1.runScript(ScriptLoaderV1.groovy:246)
+	at nextflow.script.parser.v1.ScriptLoaderV1.runScript(ScriptLoaderV1.groovy)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:246)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:139)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:379)
+	at nextflow.cli.Launcher.run(Launcher.groovy:513)
+	at nextflow.cli.Launcher.main(Launcher.groovy:673)
+Caused by: groovy.lang.MissingMethodException: No signature of method: nextflow.script.WorkflowBinding.KREPORT2MPA() is applicable for argument types: () values: []
+	at nextflow.script.WorkflowBinding.invokeMethod(WorkflowBinding.groovy:113)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokePogoMethod(InvokerHelper.java:651)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:628)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeOnDelegationObjects(ClosureMetaClass.java:392)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:331)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1007)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:321)
+	at Script_994ad37b2832aaf6$_runScript_closure1$_closure2.doCall(Script_994ad37b2832aaf6:105)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:343)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:328)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:280)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1007)
+	at groovy.lang.Closure.call(Closure.java:433)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at nextflow.script.WorkflowDef.run0(WorkflowDef.groovy:205)
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:189)
+	... 12 common frames omitted

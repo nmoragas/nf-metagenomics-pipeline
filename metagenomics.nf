@@ -40,6 +40,9 @@ include { FASTQC as FASTQC_POST } from './modules/fastqc.nf'
 include { MULTIQC as MULTIQC_POST } from './modules/multiqc.nf'
 include { KRAKEN2 } from './modules/kraken2.nf'
 include { BRACKEN } from './modules/braken.nf'
+include { KREPORT2MPA } from './modules/krakentools.nf'
+include { COMBINE_MPA  } from './modules/krakentools.nf'
+
 
 // ── Paràmetres per defecte ──────────────────────────────
 params.input  = null
@@ -101,7 +104,13 @@ workflow {
 
     // 07. Bracken abundance re-estimation
     BRACKEN( KRAKEN2.out.report) 
- 
+
+    KREPORT2MPA(BRACKEN.out.report)
+    mpa_collected = KREPORT2MPA.out.mpa
+        .map { sample_id, mpa_file -> mpa_file }
+        .collect()
+
+    COMBINE_MPA(mpa_collected) 
 
 }
 
