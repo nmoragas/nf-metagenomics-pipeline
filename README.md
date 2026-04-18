@@ -10,6 +10,7 @@ A Nextflow pipeline for shotgun metagenomics analysis, covering quality control,
 - [Pipeline Steps](#pipeline-steps)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Databases](#databases)
 - [Input](#input)
 - [Usage](#usage)
 - [Parameters](#parameters)
@@ -57,9 +58,7 @@ fastq.gz
 
 - [Nextflow](https://www.nextflow.io/) ≥ 25.04
 - [Singularity](https://sylabs.io/singularity/) or [Apptainer](https://apptainer.org/)
-- Access to the reference databases (see [Parameters](#parameters)):
-  - Human genome index (Bowtie2, hg38)
-  - Kraken2/Bracken database
+- Access to the required reference databases (see [Databases](#databases))
 
 > All software dependencies are handled automatically via containers. No manual tool installation is required.
 
@@ -67,56 +66,98 @@ fastq.gz
 
 ## Installation
 
+Clone the repository:
+
 ```bash
 git clone https://github.com/YOUR_ORG/nf-metagenomics-pipeline.git
-cd nf-metagenomics-pipeline
 ```
+
+---
+
+## Databases
+
+The pipeline requires the following reference databases. See the dedicated documentation *(coming soon)* for instructions on how to download and prepare them.
+
+| Database | Used by | Parameter |
+|----------|---------|-----------|
+| Human genome index (hg38, Bowtie2) | Bowtie2 — human read removal | `--human_db` |
+| Kraken2/Bracken database | Kraken2 + Bracken | `--kraken2_db` |
+
+> ⚠️ Paths to these databases must be set in `nextflow.config` or passed as parameters before running the pipeline.
 
 ---
 
 ## Input
 
-The pipeline requires a **samplesheet CSV** file with the following format:
+The pipeline takes as input a directory containing paired-end FASTQ files. The directory is scanned recursively, so files can be organized in subdirectories.
 
-```csv
-sample,fastq_1,fastq_2
-SAMPLE_01,/path/to/SAMPLE_01_R1.fastq.gz,/path/to/SAMPLE_01_R2.fastq.gz
-SAMPLE_02,/path/to/SAMPLE_02_R1.fastq.gz,/path/to/SAMPLE_02_R2.fastq.gz
-```
+**Accepted file extensions:** `.fastq.gz`, `.fq.gz`, `.fastq`, `.fq`
 
-| Column    | Description                        |
-|-----------|------------------------------------|
-| `sample`  | Unique sample identifier           |
-| `fastq_1` | Absolute path to R1 FASTQ file     |
-| `fastq_2` | Absolute path to R2 FASTQ file     |
+The pipeline is flexible with read pair naming conventions — the following formats are all supported:
+
+- `SAMPLE_R1.fastq.gz` / `SAMPLE_R2.fastq.gz`
+- `SAMPLE.R1.fastq.gz` / `SAMPLE.R2.fastq.gz`
+- `SAMPLE-R1.fastq.gz` / `SAMPLE-R2.fastq.gz`
+- `SAMPLE_1.fastq.gz` / `SAMPLE_2.fastq.gz`
+- `SAMPLE.1.fastq.gz` / `SAMPLE.2.fastq.gz`
+- `SAMPLE-1.fastq.gz` / `SAMPLE-2.fastq.gz`
+
+The samplesheet is generated automatically by the pipeline at runtime.
 
 ---
 
 ## Usage
 
-**Local execution with Singularity:**
+### Standard — local execution with Singularity
+
+Suitable for testing or small datasets on a local machine:
+
 ```bash
-nextflow run main.nf \
-    -profile standard,singularity \
-    --input samplesheet.csv \
-    --outdir results/
+nextflow run YOUR_ORG/nf-metagenomics-pipeline \
+    --input data/raw_data/ \
+    -profile standard,singularity
 ```
 
-**HPC execution with SLURM and Apptainer:**
+### HPC — SLURM execution with Singularity
+
+Recommended for production runs on an HPC cluster:
+
 ```bash
-nextflow run main.nf \
-    -profile slurm,apptainer \
-    --input samplesheet.csv \
-    --outdir results/
+nextflow run YOUR_ORG/nf-metagenomics-pipeline \
+    --input data/raw_data/ \
+    -profile slurm,singularity
 ```
 
-**Dry-run (stub mode):**
+### HPC — SLURM execution with Apptainer
+
+For HPC environments where Apptainer is available instead of Singularity:
+
 ```bash
-nextflow run main.nf \
+nextflow run YOUR_ORG/nf-metagenomics-pipeline \
+    --input data/raw_data/ \
+    -profile slurm,apptainer
+```
+
+### Dry-run (stub mode)
+
+Validates the pipeline structure and workflow without executing any real computation. Useful for checking that the pipeline runs correctly before launching a full analysis:
+
+```bash
+nextflow run YOUR_ORG/nf-metagenomics-pipeline \
+    --input data/raw_data/ \
     -profile standard,singularity \
-    --input samplesheet.csv \
-    --outdir results/ \
     -stub
+```
+
+### Custom output directory
+
+By default, results are written to `resultats/`. Use `--outdir` to specify a different path:
+
+```bash
+nextflow run YOUR_ORG/nf-metagenomics-pipeline \
+    --input data/raw_data/ \
+    --outdir /path/to/my/results/ \
+    -profile slurm,singularity
 ```
 
 ---
@@ -129,7 +170,7 @@ All parameters can be set in `nextflow.config` or passed directly on the command
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--input` | `null` | Path to samplesheet CSV |
+| `--input` | `null` | Path to directory containing raw FASTQ files |
 | `--outdir` | `resultats/` | Output directory |
 
 ### Human Read Removal (Bowtie2)
@@ -138,6 +179,7 @@ All parameters can be set in `nextflow.config` or passed directly on the command
 |-----------|---------|-------------|
 | `--human_db` | — | Path to hg38 Bowtie2 index |
 | `--bowtie2_extra` | `--very-sensitive-local -k 1` | Extra Bowtie2 arguments |
+
 
 ### Duplicate Removal (Clumpify)
 
@@ -180,30 +222,30 @@ All parameters can be set in `nextflow.config` or passed directly on the command
 
 ```
 resultats/
-├── 01_fastqc_pre/          # Pre-processing FastQC reports
-├── 02_multiqc_pre/         # Pre-processing MultiQC report
-├── 03_bowtie2/             # Human-depleted reads
-├── 04_clumpify/            # Deduplicated reads
-├── 05_bbduk/               # Trimmed clean reads
-├── 06_fastqc_post/         # Post-processing FastQC reports
-├── 07_multiqc_post/        # Post-processing MultiQC report
-├── 07_kraken2/             # Kraken2 classification reports
+├── 01_fastqc_pre/                        # Pre-processing FastQC reports
+├── 02_multiqc_pre/                       # Pre-processing MultiQC report
+├── 03_bowtie2/                           # Human-depleted reads
+├── 04_clumpify/                          # Deduplicated reads
+├── 05_bbduk/                             # Trimmed clean reads
+├── 06_fastqc_post/                       # Post-processing FastQC reports
+├── 07_multiqc_post/                      # Post-processing MultiQC report
+├── 07_kraken2/                           # Kraken2 classification reports
 ├── 07_bracken/
-│   ├── reports/            # Bracken kreports (*.bracken.kreport)
-│   └── output/             # Bracken output (*.bracken)
+│   ├── reports/                          # Bracken kreports (*.bracken.kreport)
+│   └── output/                           # Bracken output (*.bracken)
 ├── 08_krakentools/
-│   ├── mpa/                # Per-sample MPA files
-│   ├── combined_species_mpa.txt
-│   └── bracken_abundance_species_mpa.txt
+│   ├── mpa/                              # Per-sample MPA files (*_mpa.txt)
+│   ├── combined_species_mpa.txt          # All samples combined
+│   └── bracken_abundance_species_mpa.txt # Species-level abundance table
 └── reports/
-    ├── execution_report.html
-    └── timeline.html
+    ├── execution_report.html             # Nextflow execution report
+    └── timeline.html                     # Nextflow timeline
 ```
 
 ---
 
 ## Authors
 
-- **[Author names]** — [Institution / Research Group]
+- **[Núria Moragas]** — [IDIBELL / Oncology Data Analytics Program (PADO)]
 
 ---
