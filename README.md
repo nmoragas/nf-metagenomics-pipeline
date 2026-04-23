@@ -5,7 +5,7 @@ A Nextflow pipeline for shotgun metagenomics analysis, covering quality control,
 ---
  
 ## Table of Contents  
-
+ 
 - [Overview](#overview)
 - [Pipeline Steps](#pipeline-steps)
 - [Requirements](#requirements)
