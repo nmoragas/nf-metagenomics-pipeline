@@ -3,7 +3,7 @@
 A Nextflow pipeline for shotgun metagenomics analysis, covering quality control, host depletion, taxonomic classification, and abundance estimation.
 
 ---
-
+ 
 ## Table of Contents
 
 - [Overview](#overview)
